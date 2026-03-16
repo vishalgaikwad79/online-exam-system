@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e(t-k+9i$5k5-i7go@ab%_2&_ecw%b!2#979*22gb)$(q40eu(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["online-exam-system.onrender.com"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
