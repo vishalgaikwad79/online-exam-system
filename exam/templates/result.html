@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- RESULT SUMMARY CARD -->
+    <div class="d-flex justify-content-center align-items-center mb-4">
+        
+        <div class="card p-4 text-center shadow" style="width:400px;">
+
+            <h3 class="mb-3">📄 Result</h3>
+
+            <h1 class="display-4">
+                {{ score }} / {{ total }}
+            </h1>
+
+            <p class="fs-5">
+                Percentage: {{ percentage|floatformat:1 }}%
+            </p>
+
+            {% if percentage >= 40 %}
+                <div class="alert alert-success">
+                    ✔ You Passed 🎉
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    ❌ You Failed
+                </div>
+            {% endif %}
+
+            <div class="d-grid gap-2 mt-3">
+                <a href="{% url 'subjects' %}" class="btn btn-primary">
+                    Back to Subjects
+                </a>
+
+                <a href="{% url 'ranking' %}" class="btn btn-warning">
+                    View Ranking
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DETAILED ANSWER REVIEW -->
+    <h4 class="mb-3">Answer Review</h4>
+
+    {% for r in result_data %}
+        <div class="card p-3 mb-3 shadow-sm
+            {% if r.is_correct %}
+                border-success
+            {% else %}
+                border-danger
+            {% endif %}
+        ">
+
+            <p>
+                <strong>{{ forloop.counter }}. {{ r.question }}</strong>
+            </p>
+
+            <p>
+                Your Answer:
+                {% if r.is_correct %}
+                    <span class="text-success">
+                        {{ r.selected }}
+                    </span>
+                {% else %}
+                    <span class="text-danger">
+                        {{ r.selected|default:"Not Attempted" }}
+                    </span>
+                {% endif %}
+            </p>
+
+            {% if not r.is_correct %}
+                <p>
+                    Correct Answer:
+                    <span class="text-success">
+                        {{ r.correct }}
+                    </span>
+                </p>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    body {
+        background: #eef2f7;
+    }
+
+    .leaderboard-title {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 40px;
+    }
+
+    /* PODIUM */
+    .podium-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 50px;
+        flex-wrap: wrap;
+    }
+
+    .podium-card {
+        width: 200px;
+        text-align: center;
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        transition: 0.3s ease;
+    }
+
+    .podium-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .first {
+        background: linear-gradient(135deg, #ffcc00, #ff9800);
+        height: 260px;
+    }
+
+    .second {
+        background: linear-gradient(135deg, #b0bec5, #78909c);
+        height: 220px;
+    }
+
+    .third {
+        background: linear-gradient(135deg, #d7a86e, #a97142);
+        height: 200px;
+    }
+
+    .podium-rank {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .podium-name {
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .podium-score {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    /* OTHER RANKS */
+    .other-ranks {
+        max-width: 700px;
+        margin: auto;
+    }
+
+    .rank-item {
+        background: white;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: 0.3s ease;
+    }
+
+    .rank-item:hover {
+        transform: scale(1.02);
+    }
+
+    .rank-number {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .current-user {
+        border: 2px solid #4caf50;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+
+    <h2 class="leaderboard-title">🏆 Top Performers</h2>
+
+    {% if results %}
+
+    <!-- PODIUM SECTION -->
+    <div class="podium-wrapper">
+
+        {% for r in results|slice:":3" %}
+            {% if forloop.counter == 2 %}
+            <div class="podium-card second">
+                <div class="podium-rank">🥈</div>
+                <div class="podium-name">{{ r.student.username }}</div>
+                <div class="podium-score">
+                    {{ r.score }}/{{ r.total }} ({{ r.percentage }}%)
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for r in results|slice:":3" %}
+            {% if forloop.counter == 1 %}
+            <div class="podium-card first">
+                <div class="podium-rank">🥇</div>
+                <div class="podium-name">{{ r.student.username }}</div>
+                <div class="podium-score">
+                    {{ r.score }}/{{ r.total }} ({{ r.percentage }}%)
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for r in results|slice:":3" %}
+            {% if forloop.counter == 3 %}
+            <div class="podium-card third">
+                <div class="podium-rank">🥉</div>
+                <div class="podium-name">{{ r.student.username }}</div>
+                <div class="podium-score">
+                    {{ r.score }}/{{ r.total }} ({{ r.percentage }}%)
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+
+    <!-- OTHER RANKS -->
+    <div class="other-ranks">
+        {% for r in results|slice:"3:" %}
+        <div class="rank-item {% if r.student == request.user %} current-user {% endif %}">
+            <div>
+                <span class="rank-number">#{{ forloop.counter|add:3 }}</span>
+                &nbsp; {{ r.student.username }} — {{ r.subject.name }}
+            </div>
+            <div>
+                {{ r.score }}/{{ r.total }} ({{ r.percentage }}%)
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+        <div class="alert alert-warning text-center">
+            No rankings yet. Complete tests to appear here! 🚀
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

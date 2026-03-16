@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Subjects</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            min-height: 100vh;
+            background: #f4f6fb;
+            padding: 40px 0;
+        }
+
+        .subjects-container {
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 35px;
+            color: #2d3748;
+        }
+
+        .subject-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .subject-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 22px;
+            margin-bottom: 15px;
+            background: #f9fafc;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .subject-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .subject-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .start-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .start-btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>Available Subjects</h3>
+
+<ul class="list-group">
+    {% for subject in subjects %}
+    <li class="list-group-item d-flex justify-content-between">
+        {{ subject.name }}
+        <a href="{% url 'start_exam' subject.id %}" class="btn btn-sm btn-success">
+            Start Exam
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

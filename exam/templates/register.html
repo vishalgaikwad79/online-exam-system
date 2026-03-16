@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
+</head>
+
+<style>
+
+body{
+    background: linear-gradient(135deg,#4e73df,#1cc88a);
+    min-height:100vh;
+}
+
+/* Card Styling */
+.card{
+    border:none;
+    border-radius:20px;
+    background:#ffffff;
+    box-shadow:0 15px 35px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+/* Heading */
+h3{
+    font-weight:700;
+    color:#4e73df;
+}
+
+/* Inputs */
+.form-control{
+    border-radius:12px;
+    padding:10px 15px;
+    border:1px solid #ddd;
+    transition:0.3s;
+}
+
+.form-control:focus{
+    border-color:#4e73df;
+    box-shadow:0 0 0 3px rgba(78,115,223,0.2);
+}
+
+/* Button */
+.btn-primary{
+    border-radius:25px;
+    font-weight:600;
+    padding:10px;
+    background:linear-gradient(45deg,#4e73df,#1cc88a);
+    border:none;
+    transition:0.3s;
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Profile Image */
+#preview{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #4e73df;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+
+#preview:hover{
+    transform:scale(1.05);
+}
+
+/* Progress Bar Rounded */
+.progress{
+    height:6px;
+    border-radius:20px;
+}
+
+/* Small Text */
+small{
+    font-size:12px;
+    font-weight:500;
+}
+
+/* Login Link */
+a{
+    font-weight:500;
+    color:#4e73df;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+<div class="container mt-5" style="max-width:450px;">
+    <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Student Register</h3>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" id="registerForm">
+            {% csrf_token %}
+
+            <input type="text" name="username"
+                   class="form-control mb-3"
+                   placeholder="Username" required>
+
+            <input type="email" name="email" id="email"
+                   class="form-control mb-1"
+                   placeholder="Email Address" required>
+            <small id="emailText"></small>
+
+            <!-- PASSWORD -->
+            <div class="mb-3 position-relative">
+                <input type="password" name="password" id="password"
+                       class="form-control"
+                       placeholder="Password" required>
+                <span onclick="togglePassword('password', this)"
+                      style="position:absolute; right:10px; top:10px; cursor:pointer;">👁</span>
+
+                <div class="progress mt-2" style="height:6px;">
+                    <div id="strengthBar" class="progress-bar"></div>
+                </div>
+                <small id="strengthText"></small>
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="mb-3 position-relative">
+                <input type="password" name="confirm_password" id="confirm_password"
+                       class="form-control"
+                       placeholder="Confirm Password" required>
+                <span onclick="togglePassword('confirm_password', this)"
+                      style="position:absolute; right:10px; top:10px; cursor:pointer;">👁</span>
+                <small id="matchText"></small>
+            </div>
+
+            <input type="text" name="roll_no"
+                   class="form-control mb-3"
+                   placeholder="Roll Number" required>
+
+            <input type="text" name="mobile" id="mobile"
+                   class="form-control mb-1"
+                   placeholder="Mobile Number"
+                   maxlength="10"
+                   required>
+            <small id="mobileText"></small>
+
+            <!-- IMAGE PREVIEW + CROP -->
+            <div class="text-center mt-3">
+
+                <img id="preview"
+                     src="https://via.placeholder.com/150"
+                     style="width:150px;height:150px;border-radius:50%;object-fit:cover;border:3px solid #0d6efd;">
+
+                <input type="file"
+                       name="profile_image"
+                       id="imageInput"
+                       class="form-control mt-3"
+                       accept="image/*"
+                       required>
+            </div>
+
+            <input type="hidden" name="cropped_image" id="croppedImageInput">
+
+            <button type="submit" class="btn btn-primary w-100 mt-4">
+                Register
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-decoration-none">
+                Login Here
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+
+<script>
+
+// PASSWORD TOGGLE
+function togglePassword(fieldId, icon) {
+    let field = document.getElementById(fieldId);
+    field.type = field.type === "password" ? "text" : "password";
+}
+
+// PASSWORD STRENGTH
+let passwordField = document.getElementById("password");
+let confirmField = document.getElementById("confirm_password");
+let emailField = document.getElementById("email");
+let mobileField = document.getElementById("mobile");
+
+passwordField.addEventListener("keyup", function() {
+    let password = this.value;
+    let strengthBar = document.getElementById("strengthBar");
+    let strengthText = document.getElementById("strengthText");
+    let strength = 0;
+
+    if (password.length >= 6) strength++;
+    if (password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^A-Za-z0-9]/)) strength++;
+
+    if (strength <= 1) {
+        strengthBar.style.width = "33%";
+        strengthBar.className = "progress-bar bg-danger";
+        strengthText.innerHTML = "Weak Password";
+        strengthText.style.color = "red";
+    } 
+    else if (strength <= 3) {
+        strengthBar.style.width = "66%";
+        strengthBar.className = "progress-bar bg-warning";
+        strengthText.innerHTML = "Medium Password";
+        strengthText.style.color = "orange";
+    } 
+    else {
+        strengthBar.style.width = "100%";
+        strengthBar.className = "progress-bar bg-success";
+        strengthText.innerHTML = "Strong Password";
+        strengthText.style.color = "green";
+    }
+});
+
+// PASSWORD MATCH
+confirmField.addEventListener("keyup", function() {
+    let matchText = document.getElementById("matchText");
+
+    if (this.value === passwordField.value) {
+        matchText.innerHTML = "Passwords Match ✅";
+        matchText.style.color = "green";
+    } else {
+        matchText.innerHTML = "Passwords Do Not Match ❌";
+        matchText.style.color = "red";
+    }
+});
+
+// EMAIL VALIDATION
+emailField.addEventListener("keyup", function() {
+    let emailText = document.getElementById("emailText");
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailPattern.test(this.value)) {
+        emailText.innerHTML = "Valid Email ✅";
+        emailText.style.color = "green";
+    } else {
+        emailText.innerHTML = "Invalid Email ❌";
+        emailText.style.color = "red";
+    }
+});
+
+// MOBILE VALIDATION
+mobileField.addEventListener("keyup", function() {
+    let mobileText = document.getElementById("mobileText");
+
+    if (/^[0-9]{10}$/.test(this.value)) {
+        mobileText.innerHTML = "Valid Mobile Number ✅";
+        mobileText.style.color = "green";
+    } else {
+        mobileText.innerHTML = "Enter 10 digit mobile number ❌";
+        mobileText.style.color = "red";
+    }
+});
+
+
+// IMAGE CROPPER (MANUAL CONTROL)
+
+let imageInput = document.getElementById('imageInput');
+let preview = document.getElementById('preview');
+let croppedImageInput = document.getElementById('croppedImageInput');
+let form = document.getElementById('registerForm');
+let cropper = null;
+
+imageInput.addEventListener('change', function (e) {
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        preview.style.display = "block";
+        preview.src = event.target.result;
+
+        // Destroy old cropper
+        if (cropper !== null) {
+            cropper.destroy();
+        }
+
+        // Wait for image to fully load
+        preview.onload = function () {
+
+            cropper = new Cropper(preview, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.6,
+                movable: true,
+                zoomable: true,
+                cropBoxResizable: true,
+                cropBoxMovable: true,
+                dragMode: 'move'
+            });
+        };
+    };
+
+    reader.readAsDataURL(file);
+});
+
+
+form.addEventListener('submit', function (e) {
+
+    if (cropper) {
+        e.preventDefault();
+
+        const canvas = cropper.getCroppedCanvas({
+            width: 300,
+            height: 300
+        });
+
+        if (canvas) {
+            croppedImageInput.value = canvas.toDataURL('image/png');
+            form.submit();
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>

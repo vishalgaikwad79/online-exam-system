@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Examination System</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(-45deg,#667eea,#764ba2,#6a11cb,#2575fc);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+}
+
+/* Animated Background */
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.card{
+    width:420px;
+    padding:40px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(15px);
+    box-shadow:0 25px 45px rgba(0,0,0,0.3);
+    text-align:center;
+    color:#fff;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+.card h2{
+    font-size:26px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:14px;
+    opacity:0.9;
+    margin-bottom:30px;
+}
+
+.buttons{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+}
+
+.buttons a{
+    flex:1;
+    padding:14px;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:600;
+    transition:0.3s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Register Button */
+.register{
+    background:#ffffff;
+    color:#333;
+}
+
+.register:hover{
+    background:#f0f0f0;
+    transform:translateY(-3px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Login Button */
+.login{
+    background:#ff7eb3;
+    color:#fff;
+}
+
+.login:hover{
+    background:#ff4f9a;
+    transform:translateY(-3px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Responsive */
+@media(max-width:480px){
+    .card{
+        width:90%;
+        padding:30px;
+    }
+
+    .buttons{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🎓 Online Examination System</h2>
+    <p>Secure • Fast • Smart Assessment Platform</p>
+
+    <div class="buttons">
+        <a href="/register/" class="register">Register</a>
+        <a href="/login/" class="login">Login</a>
+    </div>
+</div>
+
+</body>
+</html>

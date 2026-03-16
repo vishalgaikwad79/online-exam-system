@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forgot Password</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: 600;
+            background-color: #ffffff;
+            color: #764ba2;
+            border: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-2px);
+        }
+
+        a {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container" style="max-width:450px;">
+    <div class="card shadow-lg p-4">
+
+        <div class="icon-circle">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h3 class="text-center mb-3 fw-bold">Forgot Password?</h3>
+        <p class="text-center mb-4">Enter your registered email to receive OTP</p>
+
+        {% if error %}
+        <div class="alert alert-danger text-dark">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <span class="input-group-text bg-white">
+                    <i class="fa-solid fa-envelope text-primary"></i>
+                </span>
+                <input type="email" name="email"
+                       class="form-control"
+                       placeholder="Enter Your Registered Email" required>
+            </div>
+
+            <button class="btn btn-primary w-100">
+                <i class="fa-solid fa-paper-plane"></i> Send OTP
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            Already received OTP?
+            <a href="{% url 'reset_password' %}" class="text-decoration-none">
+                Reset Password Here
+            </a>
+        </div>
+
+        <div class="text-center mt-2">
+            <a href="{% url 'login' %}" class="text-decoration-none">
+                Back to Login
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
