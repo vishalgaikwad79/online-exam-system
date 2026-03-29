@@ -113,9 +113,4 @@ LOGIN_URL = 'login'
 
 # Email (⚠️ password remove कर दो production में)
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "vishalgaikwad8912@gmail.com"
-EMAIL_HOST_PASSWORD = "lmkc blyk yfkh ukxz"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
